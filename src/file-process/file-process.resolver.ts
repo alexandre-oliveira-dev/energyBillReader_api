@@ -84,7 +84,6 @@ export class FileProcessResolver{
                     }).catch(err => console.log(err))
                 })
                 return res.json(insert)
-                
             })            
         }
     }
