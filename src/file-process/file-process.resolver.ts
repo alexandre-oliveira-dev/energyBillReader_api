@@ -7,11 +7,10 @@ import { s3 } from "../aws/s3";
 const service = new  FileProcessService()
 export class FileProcessResolver{
  
-    async fileProcess(req: Request, res: Response) {
-        
+    async fileProcess(req: Request, res: Response) {        
         const { file,params } = req
-        const fileName = file?.filename
-        const filePath = file?.path
+        console.log("🚀 ~ FileProcessResolver ~ fileProcess ~ file:", file)
+        const fileName = file?.originalname
         const userId = params.userId
         if (file?.buffer) {
             pdf(file.buffer).then(async data => {
@@ -33,7 +32,7 @@ export class FileProcessResolver{
                 const eeValue = refIndexEeQtd && lines[lines.findIndex(i => i.line === refIndexEeQtd)].content.split(/\s+/)[4]
 
                 //es
-                const refIndexEs = lines.find(line => line.content.includes( 'SCEE'))?.content.split('Energia SCEE s/ ICMSkWh')[1]
+                const refIndexEs = lines.find(line => line.content.includes('Energia SCEE'))?.content.split('kWh')[1]
                 const esQtd = refIndexEs?.trim().split(/\s+/)[0]
                 const esValue = refIndexEs?.trim().split(/\s+/)[2]
                 
@@ -48,6 +47,8 @@ export class FileProcessResolver{
                 //total
                 const refIndexTotal = lines.find(line => line.content.includes('TOTAL'))?.content.split('TOTAL')[1]
 
+                
+
                 const insert = await service.processFile({
                     clientNumber: String(numberClient),
                     monthReference: String(monthReference),
@@ -58,7 +59,9 @@ export class FileProcessResolver{
                     eeQtd: Number(eeQtd),
                     eeValue: String(eeValue),
                     contrPubMunicipalValue: String(refIndexCPM),
+                    total: refIndexTotal,
                     user: { 'connect': { id: userId } },
+
                 
                 }).then(async (data) => {
 
@@ -73,7 +76,7 @@ export class FileProcessResolver{
                          
                          await service.createFile({
                             fileName:String(fileName),
-                            patch:String( filePath),
+                            patch:String( fileName),
                             url: val.Location,
                             user: {
                                 connect: {
@@ -83,7 +86,7 @@ export class FileProcessResolver{
                     })
                     }).catch(err => console.log(err))
                 })
-                return res.json(insert)
+                return res.status(200).json(insert)
             })            
         }
     }
