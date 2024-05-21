@@ -20,6 +20,6 @@
     "typescript": "^5.4.5"
   },
   "scripts": {
-    "start": "nodemon ./src/app.ts"
+    "start": "nodemon ./src/index.ts"
   }
 }
