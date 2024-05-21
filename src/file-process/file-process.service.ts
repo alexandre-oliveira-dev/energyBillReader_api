@@ -8,9 +8,10 @@ export class FileProcessService{
 
     async processFile(body:Prisma.InvoiceCreateInput) {
         console.log("🚀 ~ FileProcessService ~ processFile ~ body:", body)
-        await service.invoice.create({
+       const res = await service.invoice.create({
             data:body
-        })
+       })
+        return res
     }
     async createFile(body:Prisma.FileCreateInput) {
         console.log("🚀 ~ FileProcessService ~ processFile ~ body:", body)

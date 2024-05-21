@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { FileProcessService } from "./file-process.service";
 import pdf from 'pdf-parse'
-import{} from 'pdf-lib'
-import { generatePreSignedUrl, s3 } from "../utils/s3";
+import { s3 } from "../utils/s3";
 
 
 const service = new  FileProcessService()
@@ -10,7 +9,10 @@ export class FileProcessResolver{
  
     async fileProcess(req: Request, res: Response) {
         
-        const { file } = req
+        const { file,params } = req
+        const fileName = file?.filename
+        const filePath = file?.path
+        const userId = params.userId
         if (file?.buffer) {
             pdf(file.buffer).then(async data => {
                 const lines = data.text.split('\n').map((item, index) => ({
@@ -56,35 +58,30 @@ export class FileProcessResolver{
                     eeQtd: Number(eeQtd),
                     eeValue: String(eeValue),
                     contrPubMunicipalValue: String(refIndexCPM),
-                    user: { 'connect': { id: '1' } },
+                    user: { 'connect': { id: userId } },
                 
-                }).then(async () => {
+                }).then(async (data) => {
 
-                    console.log(file)
-
-                     s3.putObject({
+                     s3.upload({
                         Bucket: 'energybillreader',
-                        Key: `files/${file.originalname}`,
-                        ContentType: file.mimetype
-                    })
+                        Key: `files/${data?.userId}/${file.originalname}`,
+                        ContentType: file.mimetype,
+                        Body: file.buffer,
+                        ACL: 'public-read'
 
-                  const url =  generatePreSignedUrl('putObject', {
-                        Bucket: 'energybillreader',
-                        Key: `files/${file.originalname}`,
-                        Expires: 3600,
-                        ContentType: file.mimetype
-                  }).then().catch(err =>console.log(err))
-                    console.log(url)
-                   /*  await service.createFile({
-                        fileName: file.filename,
-                        patch: file.path,
-                        url: String(url),
-                        user: {
-                            connect: {
-                                id:'1'
+                     }).promise().then(async (val) => {
+                         
+                         await service.createFile({
+                            fileName:String(fileName),
+                            patch:String( filePath),
+                            url: val.Location,
+                            user: {
+                                connect: {
+                                    id:data.userId
+                                }
                             }
-                        }
-                    }) */
+                    })
+                    }).catch(err => console.log(err))
                 })
                 return res.json(insert)
                 

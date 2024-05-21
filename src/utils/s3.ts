@@ -9,9 +9,3 @@ aws.config.update({
 
 export const s3 = new aws.S3();
 
-export const generatePreSignedUrl = async (
-  type = '', //'putObject' || 'getObject'
-  params = {}
-) => {
-  return await s3.getSignedUrl(type, params);
-}
