@@ -20,6 +20,7 @@
     "typescript": "^5.4.5"
   },
   "scripts": {
-    "start": "nodemon ./src/index.ts"
+    "start": "nodemon ./src/index.ts",
+    "vercel-build": "prisma generate && echo ola"
   }
 }
