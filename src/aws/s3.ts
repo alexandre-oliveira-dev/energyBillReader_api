@@ -1,4 +1,7 @@
 import aws from 'aws-sdk'
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 aws.config.update({
   accessKeyId: process.env.ACCESS_KEY_ID,

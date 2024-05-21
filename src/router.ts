@@ -6,4 +6,4 @@ export const route = Router()
 
 const upload = multer()
 
-route.post('/file', upload.single('file'), new FileProcessResolver().fileProcess)
+route.post('/file/:userId', upload.single('file'), new FileProcessResolver().fileProcess)

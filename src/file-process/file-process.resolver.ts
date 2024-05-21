@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { FileProcessService } from "./file-process.service";
 import pdf from 'pdf-parse'
-import { s3 } from "../utils/s3";
+import { s3 } from "../aws/s3";
 
 
 const service = new  FileProcessService()
