@@ -7,7 +7,6 @@ const service = new FileProcessService();
 export class FileProcessResolver {
   async fileProcess(req: Request, res: Response) {
     const {file, params} = req;
-    console.log("🚀 ~ FileProcessResolver ~ fileProcess ~ file:", file);
     const fileName = file?.originalname;
     const userId = params.userId;
     if (file?.buffer) {

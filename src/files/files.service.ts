@@ -4,20 +4,23 @@ const service = prismaClient;
 export class FilesService {
   async getFiles(userId: string) {
     const res = await service.file.findMany({where: {userId}});
-    return res;
-    /*  const invoicedata = res.map(async item => {
-      await service.invoice
-        .findUnique({
-          where: {id: item.invoiceId},
-        })
-        .then(invoice => {
-          return invoice;
+
+    const data = await Promise.all(
+      res.map(async element => {
+        const ivoice = await service.invoice.findUnique({
+          where: {id: element.invoiceId},
         });
-    });
-      console.log("🚀 ~ FilesService ~ invoicedata ~ invoicedata:", invoicedata);
+
         return {
-          file: res,
-          invoice: invoicedata[0],
-        }; */
+          ...element,
+          invoice: {
+            clientNumber: ivoice?.clientNumber,
+            monthRef: ivoice?.monthReference,
+            total: ivoice?.total,
+          },
+        };
+      })
+    );
+    return data;
   }
 }

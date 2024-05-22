@@ -1,8 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prismaClient } from "../prisma/prismaClient";
 
-
-
 const service = prismaClient
 export class FileProcessService{
 
