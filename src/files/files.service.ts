@@ -23,4 +23,9 @@ export class FilesService {
     );
     return data;
   }
+
+  async del(fileId: string) {
+    console.log("🚀 ~ FilesService ~ delete ~ fileId:", fileId);
+    return await service.file.delete({where: {id: fileId}});
+  }
 }

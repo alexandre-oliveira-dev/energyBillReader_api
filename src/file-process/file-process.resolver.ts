@@ -74,44 +74,46 @@ export class FileProcessResolver {
           .find(line => line.content.includes("TOTAL"))
           ?.content.split("TOTAL")[1];
 
-        const insert = await service
-          .processFile({
-            clientNumber: String(numberClient),
-            monthReference: String(monthReference),
-            esQtd: Number(esQtd),
-            esValue: String(esValue),
-            ecQtd: Number(ecQtd),
-            ecValue: String(ecValue),
-            eeQtd: Number(eeQtd),
-            eeValue: String(eeValue),
-            contrPubMunicipalValue: String(refIndexCPM),
-            total: refIndexTotal,
-            user: {connect: {id: userId}},
-          })
-          .then(async data => {
-            s3.upload({
-              Bucket: "energybillreader",
-              Key: `files/${data?.userId}/${file.originalname}`,
-              ContentType: file.mimetype,
-              Body: file.buffer,
-              ACL: "public-read",
+        const insert = await Promise.all([
+          service
+            .processFile({
+              clientNumber: String(numberClient),
+              monthReference: String(monthReference),
+              esQtd: Number(esQtd),
+              esValue: String(esValue),
+              ecQtd: Number(ecQtd),
+              ecValue: String(ecValue),
+              eeQtd: Number(eeQtd),
+              eeValue: String(eeValue),
+              contrPubMunicipalValue: String(refIndexCPM),
+              total: refIndexTotal,
+              user: {connect: {id: userId}},
             })
-              .promise()
-              .then(async val => {
-                await service.createFile({
-                  fileName: String(fileName),
-                  patch: String(fileName),
-                  url: val.Location,
-                  invoiceId: data.id,
-                  user: {
-                    connect: {
-                      id: data.userId,
-                    },
-                  },
-                });
+            .then(async data => {
+              s3.upload({
+                Bucket: "energybillreader",
+                Key: `files/${data?.userId}/${file.originalname}`,
+                ContentType: file.mimetype,
+                Body: file.buffer,
+                ACL: "public-read",
               })
-              .catch(err => console.log(err));
-          });
+                .promise()
+                .then(async val => {
+                  await service.createFile({
+                    fileName: String(fileName),
+                    patch: String(fileName),
+                    url: val.Location,
+                    invoiceId: data.id,
+                    user: {
+                      connect: {
+                        id: data.userId,
+                      },
+                    },
+                  });
+                })
+                .catch(err => console.log(err));
+            }),
+        ]);
         return res.status(200).json(insert);
       });
     }
