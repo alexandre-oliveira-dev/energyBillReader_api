@@ -13,7 +13,7 @@ route.get("/files/:userId", new FileResolver().getFiles);
 route.get("/user/:userEmail", new UserResolver().getUser);
 route.get("/invoices/:userId", new InvoiceResolver().getInvoices);
 route.get(
-  "/invoicesbycnumber/:userId/:clientNumber",
+  "/invoicesbycnumber/:userId",
   new InvoiceResolver().getInvoicesByClientNumber
 );
 
@@ -27,3 +27,4 @@ route.post("/createUser", new UserResolver().createUser);
 
 //DELETE
 route.delete("/delete/:fileId", new FileResolver().delete);
+route.delete("/deleteinvoice/:invoiceId", new InvoiceResolver().deleteInvoice);

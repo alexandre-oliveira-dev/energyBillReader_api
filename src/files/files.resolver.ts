@@ -12,12 +12,13 @@ export class FileResolver {
 
   async delete(req: Request, res: Response) {
     const {fileId} = req.params;
-    return await service.del(fileId).then(async value => {
+    return res.json(await service.del(fileId));
+    /*   .then(async value => {
+      console.log("🚀 ~ FileResolver ~ returnawaitservice.del ~ value:", value);
       await s3
         .deleteObject({
           Bucket: "energybillreader",
           Key: `files/${value?.userId}/${value.fileName}`,
-          
         })
         .promise()
         .then(() => {
@@ -26,6 +27,6 @@ export class FileResolver {
         .catch(err => {
           return res.json(err);
         });
-    });
+    }); */
   }
 }

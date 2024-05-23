@@ -59,7 +59,7 @@ export class FileProcessResolver {
 
         //ec
         const refIndexEc = lines
-          .find(line => line.content.includes("Energia compensada GD I"))
+          .find(line => line.content.includes("Energia compensada GD IkWh"))
           ?.content.split("Energia compensada GD IkWh")[1];
         const ecQtd = refIndexEc && refIndexEc?.trim()?.split(/\s+/)[0];
         const ecValue = refIndexEc?.trim().split(/\s+/)[2];
@@ -79,12 +79,12 @@ export class FileProcessResolver {
             .processFile({
               clientNumber: String(numberClient),
               monthReference: String(monthReference),
-              esQtd: Number(esQtd),
-              esValue: String(esValue),
-              ecQtd: Number(ecQtd),
-              ecValue: String(ecValue),
-              eeQtd: Number(eeQtd),
-              eeValue: String(eeValue),
+              esQtd: Number(esQtd) || 0,
+              esValue: String(esValue) || "0",
+              ecQtd: Number(ecQtd) || 0,
+              ecValue: String(ecValue) || "0",
+              eeQtd: Number(eeQtd) || 0,
+              eeValue: String(eeValue) || "0",
               contrPubMunicipalValue: String(refIndexCPM),
               total: refIndexTotal,
               user: {connect: {id: userId}},
