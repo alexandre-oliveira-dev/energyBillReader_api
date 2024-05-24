@@ -5,11 +5,13 @@
     "@types/multer": "^1.4.11",
     "@types/pdf-parse": "^1.1.4",
     "aws-sdk": "^2.1624.0",
+    "axios": "^1.7.2",
     "cors": "^2.8.5",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
+    "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.0",
@@ -17,10 +19,12 @@
     "pdf-parse": "^1.1.1",
     "prisma": "^5.14.0",
     "sucrase": "^3.35.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   },
   "scripts": {
     "start": "nodemon ./src/index.ts",
-    "vercel-build": "prisma generate && echo ola"
+    "vercel-build": "prisma generate && echo ola",
+    "test": "vitest"
   }
 }
