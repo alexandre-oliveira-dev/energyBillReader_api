@@ -14,7 +14,7 @@ const file = readFileSync(pdfPath);
 Iniciar a API primeiro antes de executar o teste
 */
 
-describe("Processamento do pdf", () => {
+describe("process pdf", () => {
   it("upload file and process data", async () => {
     const form = new FormData();
     form.append("file", file, "3000055479-02-2023.pdf");
