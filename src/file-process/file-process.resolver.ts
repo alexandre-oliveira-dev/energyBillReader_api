@@ -8,8 +8,8 @@ export class FileProcessResolver {
   async fileProcess(req: Request, res: Response) {
     const {file, params} = req;
     const fileName = file?.originalname;
-    console.log("🚀 ~ FileProcessResolver ~ fileProcess ~ fileName:", fileName)
     const userId = params.userId;
+
     if (file?.buffer) {
       pdf(file.buffer).then(async data => {
         const lines = data.text.split("\n").map((item, index) => ({
